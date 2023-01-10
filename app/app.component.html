@@ -1,0 +1,185 @@
+<nav class="navbar navbar-light bg-primary">
+  <div class="container-fluid">
+    <h1 style="color:aliceblue">Angular Crud</h1>
+    <div class="d-flex">
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" 
+      data-bs-target="#exampleModal" (click)="add()">Add Product</button>
+    </div>
+  </div> 
+</nav>
+<div>
+  <h1>Total Products = {{stArray.length}}</h1>
+</div>
+
+<!-- table -->
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th scope="col">SL No.</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Product Brand</th>
+        <th scope="col">Product Quantity</th>
+        <th scope="col">Product Price</th>
+        <th scope="col">Vat</th>
+        <th scope="col">Discount</th>
+        <th scope="col">Total Price</th>
+        <th scope="col">Image</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of stArray;let i=index">
+        <th scope="row">{{1+i}}</th>
+        <td>{{x.productid}}</td>
+        <td>{{x.productname}}</td>
+        <td>{{x.productbrand}}</td>
+        <td>{{x.productquantity}}</td>
+        <td>{{x.productprice|currency:'USD'}}</td>
+        <td>{{x.vat}}</td>
+        <td>{{x.discount}}</td>
+        <td>{{x.totalprice|currency:'USD'}}</td>
+        <td><img src="{{x.image}}" alt="" width="100" height="50"></td>
+        <td>
+          <button class="btn btn-info mx-2" data-bs-toggle="modal" 
+          data-bs-target="#exampleModal" (click)="edit()">Edit</button>
+          <button type="submit" class="btn btn-danger" (click)="deleteProducts(x.productid)">Delete</button>
+        </td>   
+      </tr>
+    </tbody>
+  </table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Employee Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="productid" class="form-label">Product ID : </label>
+            <input type="number" class="form-control" id="productid" name="productid" [(ngModel)]="productid" #productid1="ngModel" required pattern="^[0-9]+$" minlength="3">
+            <ul *ngIf="productid1.touched && productid1.invalid">
+              <li *ngIf="productid1.errors?.['required']">
+                <small class="text-danger">ID Field Can't be Empty</small>
+              </li>
+              <li *ngIf="productid1.errors?.['pattern']">
+                <small class="text-danger">ID Field input Must be Number</small>
+              </li>
+            </ul>
+          </div>
+          <div class="mb-3">
+            <label for="productname" class="form-label">Product Name : </label>
+            <input type="text" class="form-control" id="productname" name="productname" [(ngModel)]="productname" #productname1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="productbrand" class="form-label">Product Brand : </label>
+            <input type="text" class="form-control" id="productbrand" name="productbrand" [(ngModel)]="productbrand" #productbrand1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="productquantity" class="form-label">Product Quantity : </label>
+            <input type="number" class="form-control" id="productquantity" name="productquantity" [(ngModel)]="productquantity" #productquantity1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="productprice" class="form-label">Product Price : </label>
+            <input type="number" class="form-control" id="productprice" name="productprice" [(ngModel)]="productprice" #productprice1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="vat" class="form-label">Vat : </label>
+            <input type="number" class="form-control" id="vat" name="vat" [(ngModel)]="vat" #vat1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="discount" class="form-label">Discount : </label>
+            <input type="number" class="form-control" id="discount" name="discount" [(ngModel)]="discount" #discount1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="totalprice" class="form-label">Total Price : </label>
+            <input type="number" class="form-control" id="totalprice" name="totalprice" [(ngModel)]="totalprice" #totalprice1="ngModel">
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image : </label>
+            <input type="text" class="form-control" id="image" name="image" [(ngModel)]="image" #image1="ngModel">
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+      
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="addProducts()" *ngIf="isAdd">Submit</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" *ngIf="isEdit" (click)="updateProducts(productid1.value,productname1.value,productbrand1.value,productquantity1.value,productprice1.value,vat1.value,discount1.value,totalprice1.value,image1.value)">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container container-fluid mt-3 p-3 shadow">
+  <div class="row">
+    <div class="col col-md-6">
+      <label for="" class="d-flex justify-content-center">Selected Product</label>
+      <select #s (change)="m1(s.value)" class="form-select" aria-label="Default select example">
+        <option selected>Selected Product ID</option>
+        <option *ngFor="let x of stArray;let i=index" [value]="i">
+          {{x.productid}}
+        </option>
+      </select>
+
+    </div>
+    <div class="col col-md-6">
+      <div class="card" style="width: 18rem;">
+        <h1>Product Image</h1>
+        <img src="{{image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">ID : {{productid}}</p>
+          <p class="card-text">NAME : {{productname}}</p>
+          <p class="card-text">BRAND : {{productbrand}}</p>
+          <p class="card-text">QUANTITY : {{productquantity}}</p>
+          <p class="card-text">PRICE : {{productprice|currency:'USD'}}</p>
+          <p class="card-text">VAT : {{vat|currency:'USD'}}</p>
+          <p class="card-text">DISCOUNT : {{discount|currency:'USD'}}</p>
+          <p class="card-text">TOTAL PRICE : {{totalprice|currency:'USD'}}</p>
+          
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label for="">Show All Product</label>
+      <input type="checkbox" [(ngModel)]="sts">
+    </div>
+
+    <div *ngIf="sts">
+      <label for="">{{selectedProduct |json}}</label>
+      <table class="table table-striped table-hover">
+        <thead>
+          <th>ID</th>
+          <th>NAME</th>
+          <th>BRAND</th>
+          <th>QUANTITY</th>
+          <th>PRICE</th>
+          <th>VAT</th>
+          <th>DISCOUNT</th>
+          <th>TOTAL PRICE</th>
+          <th>IMAGE</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of stArray;let i=index" (click)="selectedProduct=x" [ngClass]="{'bg-info':x.totalprice!>=0,'bg-warning':x.totalprice!>=2}">
+            <td>{{x.productid}}</td>
+            <td>{{x.productname}}</td>
+            <td>{{x.productbrand}}</td>
+            <td>{{x.productquantity}}</td>
+            <td>{{x.productprice|currency:'USD'}}</td>
+            <td>{{x.vat|currency:'USD'}}</td>
+            <td>{{x.discount|currency:'USD'}}</td>
+            <td>{{x.totalprice|currency:'USD'}}</td>
+            <td><img src="{{x.image}}" alt="" width="100" height="50"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,22 @@
+export class Product {
+    productid:number=0;
+    productname:string="";
+    productbrand:string="";
+    productquantity:number=0;
+    productprice:number=0;
+    vat:number=0;
+    discount:number=0;
+    totalprice:number=0;
+    image:string="";
+    constructor(id:number,productname:string,productbrand:string,productquantity:number,productprice:number,vat:number,discount:number,totalprice:number,image:string){
+        this.productid=id;
+        this.productname=productname;
+        this.productbrand=productbrand;
+        this.productquantity=productquantity;
+        this.productprice=productprice;
+        this.vat=vat;
+        this.discount=discount;
+        this.totalprice=totalprice;
+        this.image=image;
+    }
+}
